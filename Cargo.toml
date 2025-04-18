@@ -1,0 +1,13 @@
+[package]
+name = "parser"
+description = "something"
+version = "0.1.0"
+edition = "2024"
+categories = ["fish"]
+license = "GPLv3+"
+readme = "README.md"
+keywords = ["fish"]
+repository = "localhost"
+
+
+[dependencies]
