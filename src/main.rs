@@ -19,14 +19,13 @@ fn main() {
         let Some(query) = detect_query(&args[2]) else {
             process::exit(1);
         };
-        let string = format!(
-            "{}\n{}\n{}",
-            query.history_entry, query.starting_index, query.ending_index
-        );
+//        dbg!(query);
+        let tmp = &[query.history_entry.to_string(), query.starting_index.to_string(), query.ending_index.to_string()];
+        let string = tmp.join("\n");
         let _ = stdout.write_all(string.as_bytes());
     } else if args[1] == "parse" {
-        let a = args[2].parse::<isize>().unwrap();
-        let b = args[3].parse::<isize>().unwrap();
+        let a = args[2].parse::<isize>().unwrap_or_else(|_| {process::exit(1)});
+        let b = args[3].parse::<isize>().unwrap_or_else(|_| {process::exit(1)});
         let mut stdout = io::stdout().lock();
         let arguments = get_arguments(&args[4]);
         //dbg!(a, b, arguments.len());
@@ -70,9 +69,9 @@ fn horrible_mess_that_seems_like_it_works(
             b = arguments.len() as isize - b + 1;
         }
         (_, Ordering::Less, _) => {
-            //dbg!("this branch 1");
+            //dbg!("this branch 1", a, b);
             a -= 1;
-            b += arguments.len() as isize;
+            b += arguments.len() as isize + 1;
         }
         _ => a -= 1,
     }
@@ -118,7 +117,7 @@ fn detect_query(string: &str) -> Option<Query> {
     for character in string.chars() {
         #[rustfmt::skip]
         match (character, state) {
-            (' ', _) => panic!("unreachable"),
+        //    (' ', _) => panic!("unreachable"),
 
             ('!', QuerySyntax::NotStarted) => state = QuerySyntax::Prefix,
             ('!', QuerySyntax::Prefix) => {
@@ -169,19 +168,19 @@ fn detect_query(string: &str) -> Option<Query> {
             if history_entry == "-" {
                 history_entry = "-1".to_string();
             }
-            value.history_entry = history_entry.parse().expect("unreachable");
+            value.history_entry = history_entry.parse().unwrap_or_else(|_| process::exit(1));
         }
         if !starting_index.is_empty() {
             if starting_index == "-" {
                 starting_index = "-1".to_string();
             }
-            value.starting_index = starting_index.parse().expect("unreachable");
+            value.starting_index = starting_index.parse().unwrap_or_else(|_| process::exit(1));
         }
         if !ending_index.is_empty() {
             if ending_index == "-" {
                 ending_index = "-1".to_string();
             }
-            value.ending_index = ending_index.parse().expect("unreachable");
+            value.ending_index = ending_index.parse().unwrap_or_else(|_| process::exit(1));
         }
         Some(value)
     } else {
@@ -387,6 +386,27 @@ mod test {
         expected_result.push(Vec::from(["\"test\'string\"\'"]));
 
         tester_function(&test_strings, &expected_result);
+    }
+    #[test]
+    fn test34() {
+        let list = Vec::from(["1".to_string(), "2".to_string(), "3".to_string(), "4".to_string(), "5".to_string(), "6".to_string(), "7".to_string(), "8".to_string(), "9".to_string(), "0".to_string()]);
+
+        let (a, b) = (1, 5);
+        let index = format!("{a}..{b}");
+        let command = format!("set list {}; echo $list[{index}]", list.join(" "));
+        let raw_output = Command::new("fish")
+            .arg("-c")
+            .arg(command)
+            .output()
+            .expect("something went wrong");
+        let expected_result = String::from_utf8_lossy(raw_output.stdout.as_slice());
+        //dbg!(a, b, &list);
+        let (new_a, new_b, new_list) = horrible_mess_that_seems_like_it_works(a, b, list);
+        //dbg!(new_a, new_b, &new_list);
+        let mut result = new_list[new_a..new_b].join(" ");
+        result.push('\n');
+
+        debug_assert_eq!(&expected_result, &result);
     }
     #[test]
     fn test33() {
@@ -1075,6 +1095,18 @@ mod test {
     #[test]
     fn empty_test() {
         let string = "!";
+        let expected_result: Option<Query> = None;
+        let result = detect_query(string);
+        //dbg!(string, expected_result, result);
+        match (&expected_result, &result) {
+            (Some(a), Some(b)) => assert_eq!(a, b),
+            (None, None) => (),
+            _ => panic!("a and b not equal"),
+        }
+    }
+    #[test]
+    fn empty_test_with_junk() {
+        let string = "!;";
         let expected_result: Option<Query> = None;
         let result = detect_query(string);
         //dbg!(string, expected_result, result);
