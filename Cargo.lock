@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "parser"
+name = "fish_history_abbreviation"
 version = "0.1.0"

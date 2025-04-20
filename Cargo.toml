@@ -1,5 +1,5 @@
 [package]
-name = "parser"
+name = "fish_history_abbreviation"
 description = "something"
 version = "0.1.0"
 edition = "2024"
@@ -7,6 +7,6 @@ categories = ["fish"]
 license = "GPLv3+"
 readme = "README.md"
 keywords = ["fish"]
-repository = "localhost"
+repository = "git.gay/nicole/fish-history-abbreviation"
 
 [dependencies]
