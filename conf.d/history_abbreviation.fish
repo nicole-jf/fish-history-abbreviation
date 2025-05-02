@@ -1,1 +1,1 @@
-abbr --add ! --position anywhere --function history_abbreviation
+abbr --add ! -r "^!.*" --position anywhere --function history_abbreviation
