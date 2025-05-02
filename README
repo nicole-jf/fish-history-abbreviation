@@ -15,3 +15,6 @@ expands into: the third last argument of the second last command
 exapnds into: second to fourth argument of the last command
 
 the indexing of arguments after : works like indexes of lists in fish, it accepts ranges, negative numbers and combinations of both, the first number indexes the history, !! is a short hand for !1, when this first number is specified it defaults to 1, it also accepts negavtive values but it does not accept ranges.
+
+
+it uses a small rust program to parse the syntax, the source code of which is at the src folder, it is recommended to compile it with the musl unknown target for portabillity, a pre compiled binary installed by fisher alongside the config snippets that add the abbreviation in the functions folder
