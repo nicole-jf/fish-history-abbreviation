@@ -181,6 +181,8 @@ fn detect_query(string: &str) -> Option<Query> {
                 ending_index = "-1".to_string();
             }
             value.ending_index = ending_index.parse().unwrap_or_else(|_| process::exit(1));
+        } else if !starting_index.is_empty() {
+                value.ending_index = value.starting_index;
         }
         Some(value)
     } else {
