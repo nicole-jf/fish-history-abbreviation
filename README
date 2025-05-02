@@ -1,0 +1,17 @@
+fish plugin that is compatible with fisher plugin manager, this plugin allows you easily recall specific arguments of recent history entries
+
+examples:
+
+!!
+expands into: last command
+
+!:2
+expands into: second argument of last command
+
+!2:-3
+expands into: the third last argument of the second last command
+
+!1:2..4
+exapnds into: second to fourth argument of the last command
+
+the indexing of arguments after : works like indexes of lists in fish, it accepts ranges, negative numbers and combinations of both, the first number indexes the history, !! is a short hand for !1, when this first number is specified it defaults to 1, it also accepts negavtive values but it does not accept ranges.
