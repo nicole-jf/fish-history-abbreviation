@@ -15,7 +15,7 @@ fn main() {
     //dbg!(&args);
 //    if args[1] == "decode" {
         let mut stdout = io::stdout().lock();
-        let Some(query) = detect_query(&args[2]) else {
+        let Some(query) = detect_query(&args[1]) else {
             process::exit(1);
         };
 //        dbg!(query);
